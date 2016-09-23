@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <report 
+			id="analytic_structured_report"
+			string="Account Analytic Structured Report"
+			model="account.analytic.account"
+			report_type="qweb-pdf"
+			file="analytic_structured_report"
+			name="account_analytic_structuring.analytic_structured_report"
+		/>
+
+        <template id="analytic_structured_report_line_account">
+            <t t-name="account_analytic_structuring.analytic_structured_report_line_account">
+                <t t-if="child.structured_type=='account'">
+                    <t t-if="child.structured_balance &lt; 0">
+                        <tr style="color: red;">
+                            <td>-- <span t-field="child.name" /></td>
+                            <td><span t-field="child.structured_debit" /></td>
+                            <td><span t-field="child.structured_credit" /></td>
+                            <td><span t-field="child.structured_balance" /></td>
+                        </tr>
+                    </t>
+                    <t t-if="child.structured_balance &gt; 0">
+                        <tr style="color: green;">
+                            <td>-- <span t-field="child.name" /></td>
+                            <td><span t-field="child.structured_debit" /></td>
+                            <td><span t-field="child.structured_credit" /></td>
+                            <td><span t-field="child.structured_balance" /></td>
+                        </tr>
+                    </t>
+                </t>
+                <t t-if="child.structured_type=='parent'">
+                    <tr>
+                        <td><strong><span t-field="child.name" /></strong></td>
+                        <td><strong><span t-field="child.structured_debit" /></strong></td>
+                        <td><strong><span t-field="child.structured_credit" /></strong></td>
+                        <td><strong><span t-field="child.structured_balance" /></strong></td>
+                    </tr>
+                    <t t-foreach="child.child_account_ids" t-as="child">
+                        <t t-call="account_analytic_structuring.analytic_structured_report_line_account" ></t>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="analytic_structured_report">
+            <t t-name="account_analytic_structuring.analytic_structured_report">
+                <t t-call="report.html_container">
+                    <t t-foreach="docs" t-as="o">
+                        <t t-call="report.external_layout">
+                            <div class="page">
+                                <style type="text/css">
+                                    .table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+                                        background-color: #F9F9F9;
+                                    }
+
+                                    .abakusBordered {
+                                        border: 2px #F68B19 solid;
+                                        background-color: #F9F9F9;
+                                    }
+
+                                    .abakusBorderedNoBackground {
+                                        border: 2px #F68B19 solid;
+                                    }
+
+                                    .abakusBackground {
+                                        background-color: #F68B19;
+                                        color: #F9F9F9;
+                                    }
+                                </style>
+
+                                <h1 class="text-center">Analytic Accounts Structured Report</h1>
+
+                                <h2>Analytic Account: <span t-field="o.structured_name" /></h2>
+                                <t t-if="docs._context['from_date'] and docs._context['from_date']">
+                                    <h4>From: <t t-esc="docs._context['from_date']"></t> - To: <t t-esc="docs._context['from_date']"></t></h4>
+                                </t>
+
+                                <table width="100%" class="table-striped abakusBorderedNoBackground">
+                                    <tr>
+                                        <th>Company</th>
+                                        <th>Debit</th>
+                                        <th>Credit</th>
+                                        <th>Balance</th>
+                                    </tr>
+                                    <tr>
+                                        <td><span t-field="o.company_id" /></td>
+                                        <td><span t-field="o.structured_debit" /></td>
+                                        <td><span t-field="o.structured_credit" /></td>
+                                        <td><span t-field="o.structured_balance" /></td>
+                                    </tr>
+                                </table>
+
+                                <h2>Children accounts</h2>
+                                <table width="100%" class="table-striped">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Debit</th>
+                                        <th>Credit</th>
+                                        <th>Balance</th>
+                                    </tr>
+                                    <t t-foreach="o.child_account_ids" t-as="child">
+                                        <t t-call="account_analytic_structuring.analytic_structured_report_line_account" ></t>
+                                    </t>
+                                </table>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>
