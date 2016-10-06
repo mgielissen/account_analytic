@@ -20,11 +20,6 @@ class account_analytic_account(models.Model):
         for account in self:
             from_date = self._context.get('from_date')
             to_date = self._context.get('to_date')
-            
-            #if from_date != False and to_date != None:
-            #    _logger.debug("CONTEXT OK (%s | %s)", from_date, to_date)
-            #else:
-            #    _logger.debug("--NO CONTEXT")
 
             if account.structured_type == 'parent':
                 d = 0.0

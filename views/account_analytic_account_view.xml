@@ -20,14 +20,14 @@
                                     <button name="print_account_report" id="print_account_report" type="object" string="Print report" />
                                 </group>
                             </group>
-                            <field name="child_account_ids" attrs="{'invisible': [('structured_type', '!=', 'parent')]}" toolbar="1"><!-- context="{'from_date': from_date, 'to_date': from_date}">-->
+                            <field name="child_account_ids" attrs="{'invisible': [('structured_type', '!=', 'parent')]}" toolbar="1" context="{'search_default_group_date': 1, 'from_date': context.get('from_date', False), 'to_date': context.get('to_date', False), }">
                                 <tree>
                                     <field name="structured_name" />
                                     <field name="code" />
                                     <field name="structured_type" />
-                                    <field name="structured_debit" />
-                                    <field name="structured_credit" />
-                                    <field name="structured_balance" />
+                                    <field name="structured_debit" sum="Total debit"/>
+                                    <field name="structured_credit" sum="Total credit"/>
+                                    <field name="structured_balance" sum="Total Balance"/>
                                     <field name="company_id" />
                                 </tree>
                             </field>
@@ -79,65 +79,5 @@
                 </xpath>
             </field>
         </record>
-        
-        <record model="ir.ui.view" id="account_analytic_account_structured_tree">
-            <field name="name">account_analytic_account_structured_tree</field>
-            <field name="model">account.analytic.account</field>
-            <field name="arch" type="xml">
-                <tree string="Analytic Accounts">
-                    <field name="structured_name" />
-                    <field name="code" />
-                    <field name="structured_type" />
-                    <field name="structured_debit" />
-                    <field name="structured_credit" />
-                    <field name="structured_balance" />
-                    <field name="company_id" />
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="account_analytic_account_structured_kanban">
-            <field name="name">account_analytic_account_structured_kanban</field>
-            <field name="model">account.analytic.account</field>
-            <field name="arch" type="xml">
-                <kanban default_group_by="structured_type" class="o_kanban_small_column">
-                    <field name="code"/>
-                    <field name="name"/>
-                    <field name="structured_name"/>
-                    <field name="structured_type"/>
-                    <field name="structured_debit"/>
-                    <field name="structured_credit"/>
-                    <field name="structured_balance" />
-                    <field name="company_id"/>
-                    <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                            <div class="oe_kanban_content">
-                                <div>
-                                    <field name="tag_ids"/>
-                                </div>
-                                <div>
-                                    <strong><field name="name"/></strong>
-                                </div>
-                            </div>
-                            <div class="oe_clear"></div>
-                        </div>
-                    </t>
-                    </templates>
-                </kanban>
-            </field>
-         </record>
-
-        <record model="ir.actions.act_window" id="account_analytic_account_structured_action">
-            <field name="name">Structured Analytic Accounts</field>
-            <field name="res_model">account.analytic.account</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,kanban,form</field>
-            <field name="domain">[]</field>
-            <!--<field name="context">{'search_default_active': 1}</field>-->
-        </record>
-
-        <menuitem id="account_analytic_account_structured_menu" name="Structured Analytic"
-                  parent="account.menu_finance_entries" action="account_analytic_account_structured_action" sequence="50"/>
     </data>
 </openerp>
