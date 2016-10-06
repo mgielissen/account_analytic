@@ -17,7 +17,6 @@
                                 </group>
                                 <group>
                                     <field name="parent_account_id" domain="[('structured_type', '=', 'parent')]" />
-                                    <button name="print_account_report" id="print_account_report" type="object" string="Print report" />
                                 </group>
                             </group>
                             <field name="child_account_ids" attrs="{'invisible': [('structured_type', '!=', 'parent')]}" toolbar="1" context="{'search_default_group_date': 1, 'from_date': context.get('from_date', False), 'to_date': context.get('to_date', False), }">
