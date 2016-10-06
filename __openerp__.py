@@ -14,5 +14,6 @@
     'data': [
         'views/account_analytic_account_view.xml',
         'views/account_analytic_line_view.xml',
+        'reports/account_analytic_account_structured_report.xml',
     ],
 }
