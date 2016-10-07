@@ -34,7 +34,7 @@ class account_analytic_account(models.Model):
 
             else:
                 analytic_line_obj = self.env['account.analytic.line']
-                domain = [('account_id', '=', account.id)]
+                domain = [('account_id', '=', account.id), ('move_id', '!=', False)]
                 if from_date:
                     domain.append(('date', '>=', from_date))
                 if to_date:
