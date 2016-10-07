@@ -34,57 +34,37 @@
             <field name="arch" type="xml">
                 <!-- Add the debit, credit and balance -->
                 <xpath expr="//group[@name='main']" position="after">
-                    <notebook>
-                        <page name="structure" string="Structure">
-                            <group>
-                                <group>
-                                    <field name="structured_name" />
-                                    <field name="structured_type" />
-                                </group>
-                                <group>
-                                    <field name="parent_account_id" domain="[('structured_type', '=', 'parent')]" />
-                                </group>
-                            </group>
-                            <field name="child_account_ids" attrs="{'invisible': [('structured_type', '!=', 'parent')]}" toolbar="1" context="{'search_default_group_date': 1, 'from_date': context.get('from_date', False), 'to_date': context.get('to_date', False), }">
-                                <tree>
-                                    <field name="structured_name" />
-                                    <field name="code" />
-                                    <field name="structured_type" />
-                                    <field name="structured_debit" sum="Total debit"/>
-                                    <field name="structured_credit" sum="Total credit"/>
-                                    <field name="structured_balance" sum="Total Balance"/>
-                                    <field name="company_id" />
-                                </tree>
-                            </field>
-                        </page>
-                        <page name="accounting" string="Accounting">
-                            <group>
-                                <group>
-                                    <field name="structured_debit" widget="monetary" />
-                                    <field name="structured_credit" widget="monetary" />
-                                </group>
-                                <group>
-                                    <field name="structured_balance" widget="monetary" />
-                                </group>
-                                <button class="oe_stat_button" icon="fa-bars"  type="action" name="%(account_analytic_structured_line_action)d"
-                        string="Lines"/>
-                            </group>
-                        </page>
-                        <!--
-                        <page name="lines" string="Lines" attrs="{'invisible': [('structured_type', '=', 'parent')]}">
-                            <field name="line_ids" domain="[('move_id', '!=', False ), (('date', '&gt;=', context.get('from_date', False)), ('date', '&lt;', context.get('to_date', False))]">
-                                <tree>
-                                    <field name="date" />
-                                    <field name="name" />
-                                    <field name="ref" />
-                                    <field name="amount" sum="Total" />
-                                    <field name="unit_amount" sum="Quantity" />
-                                    <field name="company_id" />
-                                </tree>
-                            </field>
-                        </page>
--->
-                    </notebook>
+                    <group name="accounting" string="Accounting">
+                        <group>
+                            <field name="structured_debit" widget="monetary" />
+                            <field name="structured_credit" widget="monetary" />
+                        </group>
+                        <group>
+                            <field name="structured_balance" widget="monetary" />
+                            <button class="oe_stat_button" icon="fa-bars"  type="action" name="%(account_analytic_structured_line_action)d"
+                        string="Lines" attrs="{'invisible': [('structured_type', '=', 'parent')]}"/>
+                        </group>
+                    </group>
+                    <group name="structure" string="Structure">
+                        <group>
+                          <field name="structured_name" />
+                            <field name="structured_type" />
+                        </group>
+                        <group>
+                            <field name="parent_account_id" domain="[('structured_type', '=', 'parent')]" />
+                        </group>
+                    </group>
+                    <field name="child_account_ids" attrs="{'invisible': [('structured_type', '!=', 'parent')]}" toolbar="1" context="{'search_default_group_date': 1, 'from_date': context.get('from_date', False), 'to_date': context.get('to_date', False), }">
+                        <tree>
+                            <field name="structured_name" />
+                            <field name="code" />
+                            <field name="structured_type" />
+                            <field name="structured_debit" sum="Total debit"/>
+                            <field name="structured_credit" sum="Total credit"/>
+                            <field name="structured_balance" sum="Total Balance"/>
+                            <field name="company_id" />
+                        </tree>
+                    </field>
                 </xpath>
             </field>
         </record>
