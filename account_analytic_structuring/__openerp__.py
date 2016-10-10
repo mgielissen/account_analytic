@@ -5,14 +5,15 @@
     'author': "Valentin THIRION, AbAKUS it-solutions SARL",
     'website': "http://www.abakusitsolutions.eu",
     'category': 'Accounting',
-    'description': 
+    'description':
     """
 Account Analytic Account Structured
 
 Manage you analytic accounts in a structured way.
 
-It adds a way to create a hierarchy in the analytic accounts (parents and childs),
-this way, new debit, credit and balance fields are set on parents that are sums
+It adds a way to create a hierarchy in the analytic accounts
+(parents and childs), this way, new debit, credit and balance
+fields are set on parents that are sums
 of their children's fields.
 
 This module has been developed by Valentin Thirion @ AbAKUS it-solutions
