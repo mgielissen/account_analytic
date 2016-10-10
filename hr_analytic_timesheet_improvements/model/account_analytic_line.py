@@ -4,6 +4,7 @@ from openerp.tools.translate import _
 import logging
 _logger = logging.getLogger(__name__)
 
+
 class hr_analytic_timesheet_improvements(models.Model):
     _inherit = 'account.analytic.line'
 
@@ -43,14 +44,19 @@ class hr_analytic_timesheet_improvements(models.Model):
     @api.model
     def create(self, vals):
         hr_analytic_timesheet_id = super(hr_analytic_timesheet_improvements, self).create(vals)
-        hr_analytic_timesheet_id.is_timesheet = True
-        if hr_analytic_timesheet_id.date_begin:
-            start_date = datetime.strptime(hr_analytic_timesheet_id.date_begin, '%Y-%m-%d %H:%M:%S')
-            newdate = self.check_and_correct_date_in_fifteen_step(start_date)
-            if start_date.minute != newdate.minute or start_date.second != newdate.second:
-                hr_analytic_timesheet_id.date_begin = datetime.strftime(self.check_and_correct_date_in_fifteen_step(start_date), '%Y-%m-%d %H:%M:%S')
-        else:
-            hr_analytic_timesheet_id.date_begin = datetime.strftime(self.check_and_correct_date_in_fifteen_step(datetime.now()), '%Y-%m-%d %H:%M:%S')
+
+        _logger.debug("\n\nAA Line: %s\n\n", hr_analytic_timesheet_id)
+
+        # Test if timesheet or not
+        if hr_analytic_timesheet_id.sheet_id:
+            hr_analytic_timesheet_id.is_timesheet = True
+            if hr_analytic_timesheet_id.date_begin:
+                start_date = datetime.strptime(hr_analytic_timesheet_id.date_begin, '%Y-%m-%d %H:%M:%S')
+                newdate = self.check_and_correct_date_in_fifteen_step(start_date)
+                if start_date.minute != newdate.minute or start_date.second != newdate.second:
+                    hr_analytic_timesheet_id.date_begin = datetime.strftime(self.check_and_correct_date_in_fifteen_step(start_date), '%Y-%m-%d %H:%M:%S')
+            else:
+                hr_analytic_timesheet_id.date_begin = datetime.strftime(self.check_and_correct_date_in_fifteen_step(datetime.now()), '%Y-%m-%d %H:%M:%S')
         return hr_analytic_timesheet_id
 
     @api.multi
