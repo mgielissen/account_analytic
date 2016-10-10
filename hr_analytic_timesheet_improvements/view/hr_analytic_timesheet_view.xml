@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>   
+        <record model="ir.ui.view" id="view_new_date_in_manage_worklogs_form">
+            <field name="name">new_date_in_manage_worklogs_form</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+            <field name="arch" type="xml">
+                <field name="date" position="replace">
+                    <field name="date_begin"/>
+                </field>
+                <field name="account_id" position="after">
+                    <field name="task_id" />
+                    <field name="issue_id" />
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="analytic_line_view_form_new_date">
+            <field name="name">analytic_line_view_form_new_date</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
+            <field name="arch" type="xml">
+                <field name="date" position="replace">
+                    <field name="date_begin"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_manage_worklogs_calendar" model="ir.ui.view">
+            <field name="name">Manage Worklogs</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <calendar string="Manage Worklogs" color="user_id"
+                          date_start="date_begin" date_delay="unit_amount"
+                          quick_add="False" avatar_model="account.analytic.line"
+                          mode="week">
+                    <field name="user_id"/>
+                    <field name="name"/>
+                </calendar>
+            </field>
+        </record>
+        
+        <record id="view_manage_worklogs_filter" model="ir.ui.view">
+            <field name="name">hr.analytic.timesheet.filter</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Worklog">
+                    <filter string="My Worklogs" name="my_worklogs" domain="[('user_id', '=', uid)]" help="My Worklogs"/>
+                </search>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_manage_worklogs">
+            <field name="name">Manage Worklogs</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,form,tree</field>
+            <field name="context">{'search_default_my_worklogs':1}</field>
+            <field name="search_view_id" ref="view_manage_worklogs_filter"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_manage_worklogs_calendar">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="view_manage_worklogs_calendar"/>
+            <field name="act_window_id" ref="action_manage_worklogs"/>
+        </record>
+
+        <menuitem parent="hr_attendance.menu_hr_time_tracking" id="menu_manage_worklogs_new" action="action_manage_worklogs" sequence="30"/>
+    </data>
+</openerp>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="view_hr_timesheet_sheet_new_date" model="ir.ui.view">
+			<field name="name">hr_timesheet_sheet_new_date</field>
+			<field name="model">hr_timesheet_sheet.sheet</field>
+			<field name="inherit_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='date']" position="replace">
+					<field name="date_begin"/>
+				</xpath>
+				<xpath expr="//field[@name='account_id']" position="after">
+					<field name="issue_id"/>
+					<field name="task_id"/>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="view_hr_timesheet_line_new_date" model="ir.ui.view">
+			<field name="name">hr_timesheet_line_new_date</field>
+			<field name="model">account.analytic.line</field>
+			<field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='date']" position="replace">
+					<field name="date_begin"/>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="view_hr_timesheet_line_task_and_issue_link" model="ir.ui.view">
+			<field name="name">view_hr_timesheet_line_task_and_issue_link</field>
+			<field name="model">account.analytic.line</field>
+			<field name="inherit_id" ref="analytic.view_account_analytic_line_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='account_id']" position="after">
+					<field name="issue_id"/>
+					<field name="task_id"/>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>
