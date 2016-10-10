@@ -45,8 +45,6 @@ class hr_analytic_timesheet_improvements(models.Model):
     def create(self, vals):
         hr_analytic_timesheet_id = super(hr_analytic_timesheet_improvements, self).create(vals)
 
-        _logger.debug("\n\nAA Line: %s\n\n", hr_analytic_timesheet_id)
-
         # Test if timesheet or not
         if hr_analytic_timesheet_id.sheet_id:
             hr_analytic_timesheet_id.is_timesheet = True
