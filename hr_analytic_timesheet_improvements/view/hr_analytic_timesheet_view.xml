@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>   
         <record model="ir.ui.view" id="view_new_date_in_manage_worklogs_form">
@@ -12,6 +12,7 @@
                 <field name="account_id" position="after">
                     <field name="task_id" />
                     <field name="issue_id" />
+                    <field name="sheet_id" attrs="{'invisible': [('sheet_id', '=', False)]}" />
                 </field>
             </field>
         </record>
@@ -23,6 +24,9 @@
             <field name="arch" type="xml">
                 <field name="date" position="replace">
                     <field name="date_begin"/>
+                </field>
+                <field name="account_id" position="after">
+                    <field name="sheet_id" attrs="{'invisible': [('sheet_id', '=', False)]}" />
                 </field>
             </field>
         </record>
