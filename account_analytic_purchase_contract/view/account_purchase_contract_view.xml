@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+        <record id="view_purchase_contract_form" model="ir.ui.view">
+            <field name="name">purchase.contract.form</field>
+            <field name="model">sale.subscription</field>
+            <field name="inherit_id" ref="sale_contract.sale_subscription_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <field name="type"/>
+                </xpath>
+                <xpath expr="//page[@id='lines']" position="after">
+                    <h2>Terms and Conditions</h2>
+                    <field name="description"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_purchase_contract_list" model="ir.ui.view">
+            <field name="name">purchase.contract.list</field>
+            <field name="model">sale.subscription</field>
+            <field name="inherit_id" ref="sale_contract.sale_subscription_view_list" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='display_name']" position="before">
+                    <field name="type"/>
+                </xpath>
+            </field>
+        </record>
+	</data>
+</openerp>
