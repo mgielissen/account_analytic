@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>      
+        <record id="view_hr_timesheet_sheet_on_site" model="ir.ui.view">
+            <field name="name">hr_timesheet_sheet_on_site</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+			<field name="inherit_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='name']" position="after">
+                    <field name="on_site"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

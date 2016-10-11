@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>      
+        <record model="ir.ui.view" id="sale_subscription_on_site_product">
+            <field name="name">sale_subscription_on_site_product</field>
+            <field name="model">sale.subscription</field>
+            <field name="inherit_id" ref="sale_contract.sale_subscription_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='main']" position="after">
+                    <group attrs="{'invisible': [('type','!=','contract'), ('type','!=','template')]}">
+                        <group string="On Site Settings" id="on_site_settings">
+                            <field name ="on_site_product"/>
+                            <field name ="on_site_invoice_by_km"/>
+                            <field name ="on_site_distance_in_km"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
