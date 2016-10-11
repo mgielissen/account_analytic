@@ -6,6 +6,9 @@
             <field name="model">sale.subscription</field>
             <field name="inherit_id" ref="sale_contract.sale_subscription_view_form" />
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                     <field name="partner_id" attrs="{'invisible': [('type','=','template')], 'required': ['|', ('type','=','contract'), ('type','=','purchase_contract')] }" on_change="on_change_partner(partner_id)" string="Partner"/>
+                </xpath>
                 <xpath expr="//field[@name='partner_id']" position="before">
                     <field name="type"/>
                 </xpath>
