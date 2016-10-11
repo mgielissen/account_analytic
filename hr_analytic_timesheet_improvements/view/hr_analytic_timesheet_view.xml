@@ -10,8 +10,8 @@
                     <field name="date_begin"/>
                 </field>
                 <field name="account_id" position="after">
-                    <field name="task_id" />
-                    <field name="issue_id" />
+                    <field name="issue_id" domain="[('project_id.analytic_account_id', '=', account_id)]"/>
+					<field name="task_id" domain="[('project_id.analytic_account_id', '=', account_id)]"/>
                     <field name="sheet_id" attrs="{'invisible': [('sheet_id', '=', False)]}" />
                 </field>
             </field>

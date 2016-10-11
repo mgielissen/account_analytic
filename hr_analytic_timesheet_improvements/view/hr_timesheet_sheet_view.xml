@@ -10,8 +10,8 @@
 					<field name="date_begin"/>
 				</xpath>
 				<xpath expr="//field[@name='account_id']" position="after">
-					<field name="issue_id"/>
-					<field name="task_id"/>
+					<field name="issue_id" domain="[('project_id.analytic_account_id', '=', account_id)]"/>
+					<field name="task_id" domain="[('project_id.analytic_account_id', '=', account_id)]"/>
 				</xpath>
 			</field>
 		</record>
@@ -33,8 +33,8 @@
 			<field name="inherit_id" ref="analytic.view_account_analytic_line_form" />
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='account_id']" position="after">
-					<field name="issue_id"/>
-					<field name="task_id"/>
+					<field name="issue_id" domain="[('project_id.analytic_account_id', '=', account_id)]"/>
+					<field name="task_id" domain="[('project_id.analytic_account_id', '=', account_id)]"/>
 				</xpath>
 			</field>
 		</record>
