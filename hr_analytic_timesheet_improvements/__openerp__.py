@@ -1,6 +1,6 @@
 {
     'name': "Worklog management improvements",
-    'version': '9.0.1.0.0',
+    'version': '9.0.1.0.2',
     'depends': ['hr_timesheet',
                 'project_timesheet',
                 'project_issue_sheet'],
@@ -22,9 +22,10 @@
     This module has been developed by
     Bernard DELHEZ @ AbAKUS it-solution.
     """,
-    'data': ['view/hr_analytic_timesheet_view.xml',
-             'view/project_issue_view.xml',
-             'view/hr_timesheet_sheet_view.xml',
-             'hr_analytic_timesheet_data.xml',
+    'data': ['views/hr_analytic_timesheet_view.xml',
+             'views/project_issue_view.xml',
+             'views/hr_timesheet_sheet_view.xml',
+             'views/project_task_view.xml',
+             'data/hr_analytic_timesheet_data.xml',
             ],
 }

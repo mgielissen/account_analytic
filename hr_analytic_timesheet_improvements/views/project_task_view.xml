@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>      
+        <record id="view_project_task_timesheet_start_date" model="ir.ui.view">
+            <field name="name">view_project_task_timesheet_start_date</field>
+            <field name="model">project.task</field>
+			<field name="inherit_id" ref="project_timesheet.view_task_form2_inherited"/>
+            <field name="arch" type="xml">
+				<field name="date" position="attributes">
+                    <attribute name='invisible'>1</attribute> 
+                </field>
+                <field name="date" position="after">
+                    <field name="date_begin"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
