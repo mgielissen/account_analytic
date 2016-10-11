@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api
+
 import datetime
+import logging
+_logger = logging.getLogger(__name__)
+
 
 class sale_subscription_improvements(models.Model):
     _inherit = 'sale.subscription'
@@ -75,7 +79,10 @@ class sale_subscription_improvements(models.Model):
     def _get_product_name(self):
         self.contract_type_product_name = self.contract_type.timesheet_product.name
         self.contractual_minimum_amount = self.contract_type.contractual_minimum_amount
-        self.quantity_max = self.contract_type.contractual_minimum_amount * 2
+        if self.contract_type.timesheet_product:
+            self.quantity_max = (self.contract_type.contractual_minimum_amount / self.contract_type.timesheet_product.lst_price) * 2
+        else:
+            self.quantity_max = 0
 
     @api.one
     def _compute_number_of_timesheets(self):
