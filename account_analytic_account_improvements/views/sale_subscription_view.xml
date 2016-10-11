@@ -8,17 +8,17 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@id='on_site_settings']" position="before">
                     <!-- Support Contract Info -->
-                    <group string="Support Contract Settings" id="contract_settings">
+                    <group string="Support Contract Settings" id="contract_settings" attrs="{'invisible': [('type','!=','contract'), ('type','!=','template')]}">
                         <field name="contract_type" attrs="{'required':[('type', 'in', ['contract', 'template'])]}"/>
-                        <field name="use_project" attrs="{'invisible': [('contract_type', 'NOT LIKE', 'BL')]}"/>
-                        <field name="project_id" attrs="{'invisible': [('use_project', '=', False)]}"/>
-                        <field name="contractual_minimum_amount" attrs="{'invisible': [('contract_type', 'NOT LIKE', 'BL')]}"/>
-                        <field name="contract_type_product_name" attrs="{'invisible': [('contract_type', 'NOT LIKE', 'BL')]}"/>
-                        <field name="timesheet_product_price" attrs="{'invisible': [('contract_type', 'NOT LIKE', 'BL')]}"/>
+                        <field name="use_project" />
+                        <field name="project_id" />
+                        <field name="contractual_minimum_amount" />
+                        <field name="contract_type_product_name" />
+                        <field name="timesheet_product_price" />
                         <field name="contract_team"/>
                     </group>
                     <!-- Invoicing and status -->
-                    <group string="Invoicing Support Contract" id="invoicing_support_contract">
+                    <group string="Invoicing Support Contract" id="invoicing_support_contract" attrs="{'invisible': [('type','!=','contract'), ('type','!=','template')]}">
                         <field name="quantity_max" />
                         <div attrs="{'invisible': [('computed_units_consumed','=',0)]}" class="oe_grey">
                             <field name="computed_units_consumed" class="oe_inline"/> Units Consumed
