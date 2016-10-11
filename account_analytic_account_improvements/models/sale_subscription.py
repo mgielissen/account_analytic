@@ -311,5 +311,5 @@ class sale_subscription_improvements(models.Model):
             dict['value']['timesheet_product_price'] = template.timesheet_product_price
             dict['value']['contract_team'] = template.contract_team.id
             dict['value']['contractual_minimum_amount'] = template.contractual_minimum_amount
-            dict['value']['quantity_max'] = template.contractual_minimum_amount * 2
+            dict['value']['quantity_max'] = template.quantity_max
         return dict
