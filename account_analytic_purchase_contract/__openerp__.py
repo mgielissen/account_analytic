@@ -20,7 +20,7 @@
 ##############################################################################
 {
     "name": "Account Analytic Purchase Contract",
-    'version': '9.0.1.0',
+    'version': '9.0.1.0.0',
     'category': 'Accounting',
     'summary': 'Quotations, Sales Orders, Invoicing',
     'description': """
@@ -39,9 +39,9 @@ sales.
         'purchase',
     ],
     'data': [
-        'view/account_purchase_contract_view.xml',
-        'view/account_purchase_contract_menu.xml',
-        'account_analytic_analysis_cron.xml'
+        'views/account_purchase_contract_view.xml',
+        'views/account_purchase_contract_menu.xml',
+        'data/account_analytic_analysis_cron.xml'
     ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

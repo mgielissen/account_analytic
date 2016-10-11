@@ -10,7 +10,7 @@ import time
 import logging
 _logger = logging.getLogger(__name__)
 
-from openerp.osv import osv, fields
+from openerp import models, fields, api
 import openerp.tools
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
@@ -18,14 +18,12 @@ from openerp.exceptions import UserError
 from openerp.addons.decimal_precision import decimal_precision as dp
 
 
-class account_analytic_account(osv.osv):
+class purchase_subscription(models.Model):
     _inherit = "sale.subscription"
 
-    _columns = {
-        'type': fields.selection([('contract', 'Sale Contract'), ('template', 'Template'), ('purchase_contract', 'Purchase Contract')], 'Type'),
-    }
+    type = fields.Selection([('contract', 'Sale Contract'), ('template', 'Template'), ('purchase_contract', 'Purchase Contract')], string='Type')
 
-    def _prepare_invoice_data(self, cr, uid, contract, context=None):
+    def _prepare_purchase_invoice_data(self, cr, uid, contract, context=None):
         context = context or {}
 
         journal_obj = self.pool.get('account.journal')
@@ -64,9 +62,9 @@ class account_analytic_account(osv.osv):
             }
             return invoice
         else:
-            return super(account_analytic_account, self)._prepare_invoice_data(cr, uid, contract, context=context)
+            return super(purchase_subscription, self)._prepare_purchase_invoice_data(cr, uid, contract, context=context)
 
-    def _prepare_invoice_lines(self, cr, uid, contract, fiscal_position_id, context=None):
+    def _prepare_purchase_invoice_lines(self, cr, uid, contract, fiscal_position_id, context=None):
         if not context:
             context = {}
         if contract.type == 'purchase_contract':
@@ -98,7 +96,7 @@ class account_analytic_account(osv.osv):
                 invoice_lines.append((0, 0, {
                     'name': line.name,
                     'account_id': account_id,
-                    'account_analytic_id': contract.id,
+                    'account_analytic_id': contract.analytic_account_id.id,
                     'price_unit': line.price_unit or 0.0,
                     'quantity': line.quantity,
                     'uom_id': line.uom_id.id or False,
@@ -107,13 +105,53 @@ class account_analytic_account(osv.osv):
                 }))
             return invoice_lines
         else:
-            return super(account_analytic_account, self)._prepare_invoice_lines(cr, uid, contract, fiscal_position_id, context=None)
+            return super(purchase_subscription, self)._prepare_purchase_invoice_lines(cr, uid, contract, fiscal_position_id, context=None)
+
+    def _prepare_purchase_invoice(self, cr, uid, contract, context=None):
+        invoice = self._prepare_purchase_invoice_data(cr, uid, contract, context=context)
+        invoice['invoice_line_ids'] = self._prepare_purchase_invoice_lines(cr, uid, contract, invoice['fiscal_position_id'], context=context)
+        return invoice
+
+    def _recurring_create_purchase_invoice(self, cr, uid, ids, automatic=False, context=None):
+        context = context or {}
+        invoice_ids = []
+        current_date = time.strftime('%Y-%m-%d')
+        if ids:
+            contract_ids = ids
+        else:
+            contract_ids = self.search(cr, uid, [('recurring_next_date', '<=', current_date), ('state', '=', 'open'), ('type', '=', 'purchase_contract')])
+        if contract_ids:
+            cr.execute('SELECT a.company_id, array_agg(sub.id) as ids FROM sale_subscription as sub JOIN account_analytic_account as a ON sub.analytic_account_id = a.id WHERE sub.id IN %s GROUP BY a.company_id', (tuple(contract_ids),))
+            for company_id, ids in cr.fetchall():
+                context_company = dict(context, company_id=company_id, force_company=company_id)
+                for contract in self.browse(cr, uid, ids, context=context_company):
+                    try:
+                        invoice_values = self._prepare_purchase_invoice(cr, uid, contract, context=context_company)
+                        invoice_ids.append(self.pool['account.invoice'].create(cr, uid, invoice_values, context=context_company))
+                        self.pool['account.invoice'].compute_taxes(cr, uid, [invoice_ids[-1]], context=context_company)
+                        next_date = datetime.datetime.strptime(contract.recurring_next_date or current_date, "%Y-%m-%d")
+                        interval = contract.recurring_interval
+                        if contract.recurring_rule_type == 'daily':
+                            new_date = next_date + relativedelta(days=+interval)
+                        elif contract.recurring_rule_type == 'weekly':
+                            new_date = next_date + relativedelta(weeks=+interval)
+                        elif contract.recurring_rule_type == 'monthly':
+                            new_date = next_date + relativedelta(months=+interval)
+                        else:
+                            new_date = next_date + relativedelta(years=+interval)
+                        self.write(cr, uid, [contract.id], {'recurring_next_date': new_date.strftime('%Y-%m-%d')}, context=context_company)
+                        if automatic:
+                            cr.commit()
+                    except Exception:
+                        if automatic:
+                            cr.rollback()
+                            _logger.exception('Fail to create recurring invoice for contract %s', contract.code)
+                        else:
+                            raise
+        return invoice_ids
 
     def _cron_recurring_create_invoice_purchase(self, cr, uid, context=None):
-        current_date =  time.strftime('%Y-%m-%d')
-        contract_ids = self.search(cr, uid, [('recurring_next_date', '<=', current_date), (
-            'state', '=', 'open'), ('type', '=', 'purchase_contract')])
-        return self._recurring_create_invoice(cr, uid, contract_ids, context=context)
+        return self._recurring_create_purchase_invoice(cr, uid, [], automatic=True, context=context)
 
     def action_subscription_invoice(self, cr, uid, ids, context=None):
         subs = self.browse(cr, uid, ids, context=context)
