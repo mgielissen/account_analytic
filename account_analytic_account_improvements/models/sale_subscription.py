@@ -72,7 +72,7 @@ class sale_subscription_improvements(models.Model):
             if self.analytic_account_id:
                 if len(self.analytic_account_id.project_ids) > 0:
                     self.project_id = self.analytic_account_id.project_ids[0]
-                    self.project_id.write({'sale_subscription_id': self.id})
+                    self.project_id.sudo().write({'sale_subscription_id': self.id})
 
     @api.one
     @api.onchange('contract_type')
