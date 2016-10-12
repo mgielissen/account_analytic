@@ -62,8 +62,8 @@ class sale_subscription_improvements(models.Model):
     @api.onchange('contract_type')
     def _get_use_project(self):
         self.use_project = self.contract_type.use_project
-        self.analytic_account_id.write({'use_tasks': self.use_project})
-        self.analytic_account_id.write({'use_issues': self.use_project})
+        self.analytic_account_id.sudo().write({'use_tasks': self.use_project})
+        self.analytic_account_id.sudo().write({'use_issues': self.use_project})
 
     @api.one
     @api.onchange('contract_type')
